@@ -10,7 +10,17 @@ from numbers_in_words import ones, teens, tens, hundreds
 
 
 def num_text_converter(num: int) -> Tuple[int, str]:
-    """Функция получает число, и возвращает число прописью"""
+    """
+    Небольшая функция работающая на рекурсии и возвращающая кортеж 
+    (число, пропись)
+    На данном этапе работает до миллиардов,
+            
+    Args:
+        num (int): Вводится число которое нужно преобразовать в пропись
+
+    Returns:
+        Tuple[int, str]: Возвращается кортеж со входным числом и прописью
+    """
     if num <= 0:
         return (num, '')
     if num < 10:
@@ -23,39 +33,42 @@ def num_text_converter(num: int) -> Tuple[int, str]:
         else:
             text = f"{tens[num//10*10]} {ones[num % 10]}"
             return (num, text)
-    elif num < 1000:
+    elif num < 1_000:
         if num % 100 == 0:
             return (num, hundreds[num])
         else:
-            text = f"{hundreds[num//100*100]} {num_text_converter(num=num%100)[1]}"
+            text = f"{hundreds[num//100*100]} "+\
+                   f"{num_text_converter(num=num%100)[1]}"
             return (num, text)
-    elif num < 1000000:
+    elif num < 1_000_000:
         thousands_descriptor = "тысяч"
-        temp_num = num // 1000
+        temp_num = num // 1_000
         if temp_num < 5:
             if temp_num == 1:
-                text = f"одна тысяча {num_text_converter(num=num%1000)[1]}"
+                text = f"одна тысяча {num_text_converter(num=num%1_000)[1]}"
                 text = text.strip()
                 print(text)
                 return (num, text)
             elif temp_num == 2:
-                text = f"две тысячи {num_text_converter(num=num%1000)[1]}"
+                text = f"две тысячи {num_text_converter(num=num%1_000)[1]}"
                 text = text.strip()
                 return (num, text)
             else:
                 thousands_descriptor = "тысячи"    
-        text = f"{num_text_converter(temp_num)[1]} {thousands_descriptor} {num_text_converter(num=num%1000)[1]}"
+        text = f"{num_text_converter(temp_num)[1]} {thousands_descriptor} "+\
+               f"{num_text_converter(num=num%1_000)[1]}"
         text = text.strip()
         return (num, text)
     elif num < 1_000_000_000:
         millions_descriptor = "миллионов"
-        temp_num = num // 1000000
+        temp_num = num // 1_000_000
         if temp_num < 5:
             if temp_num == 1:
                 millions_descriptor = "миллион"
             else:
                 millions_descriptor = "миллиона"  
-        text = f"{num_text_converter(temp_num)[1]} {millions_descriptor} {num_text_converter(num=num%1000000)[1]}"
+        text = f"{num_text_converter(temp_num)[1]} {millions_descriptor}"+\
+               f"{num_text_converter(num=num%1_000_000)[1]}"
         text = text.strip()
         return (num, text)
 

@@ -4,9 +4,8 @@
 #  Instagram:    https://www.linkedin.com/in/altynbek-aseev/   #
 #                       © AuF22                                #
 # +==========================================================+ #
-from handlers import num_text_converter
+from handlers import start_handler
 
 
 if __name__ == "__main__":
-    a = num_text_converter(12)
-    print(a)
+    start_handler()

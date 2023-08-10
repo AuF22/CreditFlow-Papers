@@ -1,6 +1,2 @@
-from .tools import num_text_converter
+from .handler import start_handler
 
-
-if __name__ == "__main__":
-    a = num_text_converter(12)
-    print(a)
