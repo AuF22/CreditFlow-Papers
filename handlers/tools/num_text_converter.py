@@ -6,7 +6,7 @@
 #                       © AuF22                                #
 # +==========================================================+ #
 from typing import Tuple
-from numbers_in_words import ones, teens, tens, hundreds
+from .numbers_in_words import ones, teens, tens, hundreds
 
 
 def num_text_converter(num: int) -> Tuple[int, str]:

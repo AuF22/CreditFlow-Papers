@@ -1,4 +1,11 @@
 """Обрабатываем заявки"""
+# +==========================================================+ #
+#  GitHub:       https://github.com/AuF22                      #
+#  LinkedIn:     https://www.instagram.com/mr_aseev14/         #
+#  Instagram:    https://www.linkedin.com/in/altynbek-aseev/   #
+#                       © AuF22                                #
+# +==========================================================+ #
+from .tools import *
 
 
 solition_t = ["Отказать", "Отправить на доработку"]
@@ -20,25 +27,34 @@ def transition(sheet, cell:int) -> int:
 def notice(sheet, _notice:bool, cell:int, letter: str) -> dict:
     """Возвращает значания элементов список по в двух формах с примечанием
     или без примечания"""
-    _notice =_notice
     
+    
+    month = sheet[f"{letter}{cell+3}"].value.split(' ')
+    sum = num_text_converter(sheet[f"{letter}{cell+1}"].value)
+    percent = num_text_converter(int(sheet[f"{letter}{cell+2}"].value*100))
+    time = num_text_converter(int(month[0]))
+    
+    product_and_target = split_target(sheet[f"E{cell}"].value)
+    branch = branch_strip(sheet[f"C{cell+3}"].value.strip())
     
     req = {
-            'full_name': sheet[f"C{cell}"].value,                   # ФИО клиента
-            'branch': sheet[f"C{cell}"].value,                      # Отделение
-            'target': sheet[f"E{cell}"].value,                      # Цель кредита
-            'secured': sheet[f'F{cell}'].value,                     # Обеспечение
-            'answer': sheet[f"G{cell}"].value,                      # Решение КК
-            'sum': sheet[f"{letter}{cell+1}"].value,                # Сумма кредита
-            'percent': int(sheet[f"{letter}{cell+2}"].value*100),   # Процентная ставка
-            'time': sheet[f"{letter}{cell+3}"].value,               # Срок кредита
-            'notice': None                                          # Примечания
-        }   
+            'full_name': sheet[f"C{cell}"].value,                               # ФИО клиента
+            'branch': branch,                                                   # Отделение
+            'target': product_and_target[1],                                    # Цель кредита
+            'product': product_and_target[0],                                   # Продукт
+            'secured': sheet[f'F{cell}'].value,                                 # Обеспечение
+            'answer': sheet[f"G{cell}"].value,                                  # Решение КК
+            'sum': f'{sum[0]:_}'.replace('_', ' ')+f' ({sum[1].capitalize()})',  # Сумма кредита
+            'percent': f'{percent[0]} ({percent[1].capitalize()})',             # Процентная ставка
+            'time': f'{time[0]} ({time[1].capitalize()}) {month[1]}',           # Срок кредита
+            'notice': None                                                      # Примечания
+        }
     
     if _notice:
-        req['notice'] = sheet[f'G{cell+4}'].value                   # Примечание
-    else:
-        pass
+        req['branch'] = sheet[f"C{cell+4}"].value.strip()                       # Отделение
+        req['notice'] = sheet[f'G{cell+4}'].value                               # Примечание
+    
+    
     return req
 
 

@@ -1,4 +1,10 @@
 """Данная часть кода ответсвенна по обработке протокола Кредитного Комитета"""
+# +==========================================================+ #
+#  GitHub:       https://github.com/AuF22                      #
+#  LinkedIn:     https://www.instagram.com/mr_aseev14/         #
+#  Instagram:    https://www.linkedin.com/in/altynbek-aseev/   #
+#                       © AuF22                                #
+# +==========================================================+ #
 import openpyxl
 from tkinter.filedialog import askopenfilename
 from .request import LoanApplication
@@ -25,8 +31,9 @@ def start_handler():
         cell += 1
     # ==========================================
     
-    print(cell)
+    
     cell += 1
+    
     
     while True:
         # В данной точке выбирается обработчик Заявок/Служебок
@@ -48,6 +55,7 @@ def start_handler():
             else:
                 # Заканчивает работу обработчика
                 print("все")
+                
                 break
 
 
