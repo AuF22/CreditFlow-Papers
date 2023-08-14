@@ -67,7 +67,7 @@ def num_text_converter(num: int) -> Tuple[int, str]:
                 millions_descriptor = "миллион"
             else:
                 millions_descriptor = "миллиона"  
-        text = f"{num_text_converter(temp_num)[1]} {millions_descriptor}"+\
+        text = f"{num_text_converter(temp_num)[1]} {millions_descriptor} "+\
                f"{num_text_converter(num=num%1_000_000)[1]}"
         text = text.strip()
         return (num, text)
