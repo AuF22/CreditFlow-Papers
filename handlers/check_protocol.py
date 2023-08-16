@@ -46,7 +46,8 @@ class LoanCheck():
                 self.request_dict[index] = solit(
                                                 sheet=sheet, 
                                                 solition=solution, 
-                                                _notice=True, cell=cell)
+                                                _notice=True, 
+                                                cell=cell)
                 transit = transition(sheet=sheet, cell=cell+5)
                 
                 if transit[1]:
@@ -64,7 +65,8 @@ class LoanCheck():
                 self.request_dict[index] = solit(
                                                 sheet=sheet, 
                                                 solition=solution, 
-                                                _notice=False, cell=cell
+                                                _notice=False, 
+                                                cell=cell
                                                 )
                 transit = transition(sheet=sheet, cell=cell+4)
                 
@@ -80,30 +82,64 @@ class LoanCheck():
     def official_leter(self):
     
         sheet = self.sheet  # Лист по которому будет проводиться обработка
-        cell = self.cell    # Ячейка
-
+        cell = self.cell + 1    # Ячейка
 
         while True:
             
             # С кредитным договором
             # =============================
-            print(sheet[f"C{cell+2}"].value)
             
-            if sheet[f"C{cell+2}"].value is not None:
-                index = sheet[f'B{cell+1}'].value # Нумерация вопроса КК
-                self.request_dict[index] = merged(sheet=sheet, cell=cell+1)
+            if sheet[f"C{cell+1}"].value is not None:
+                index = sheet[f'B{cell}'].value # Нумерация вопроса КК
                 
-                if sheet[f"B{cell+3}"].value is None:
-                    self.request_dict[index]
+                
+                if sheet[f"B{cell+2}"].value is None:
+                    self.request_dict[index] = merged(
+                                                    sheet=sheet, 
+                                                    cell=cell, 
+                                                    loan_type="double"
+                                                    )
                     
-                break
+                    transit = transition(sheet=sheet, cell=cell+4)
+                    
+                    if transit[1]:
+                        cell = transit[0] # Локальное изменение ячейки
+                    else:
+                        self.cell = transit[0] # Глобальное изменение ячейки
+                        break
+                    
+                    
+                else:
+                    self.request_dict[index] = merged(
+                                                    sheet=sheet, 
+                                                    cell=cell, 
+                                                    loan_type="single"
+                                                    )
+                    
+                    transit = transition(sheet=sheet, cell=cell+2)
+                    if transit[1]:
+                        cell = transit[0] # Локальное изменение ячейки
+                    else:
+                        self.cell = transit[0] # Глобальное изменение ячейки
+                        break                    
             # =============================
 
 
             # Без кредитного договора передача КП, разрешение на выдачу и т.п.
             # =========================
             else:
-                print('проработал')
-                break
+                
+                self.request_dict[index] = merged(
+                                sheet=sheet, 
+                                cell=cell, 
+                                loan_type="none_loan"
+                                )
+                
+                transit = transition(sheet=sheet, cell=cell+2)
+                if transit[1]:
+                    cell = transit[0] # Локальное изменение ячейки
+                else:
+                    self.cell = transit[0] # Глобальное изменение ячейки
+                    break      
             # =========================
             

@@ -67,7 +67,7 @@ def start_handler() -> List[dict]:
             elif selection_point == 'Служебная записка':
                 # Обрабатываются служебки
                 handler.official_leter()
-                break
+                cell = handler.cell
             # ==========================================
             
             

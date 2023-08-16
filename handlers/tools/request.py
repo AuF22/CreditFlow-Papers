@@ -15,8 +15,8 @@ solition_t = ["Отказать", "Отправить на доработку"]
 
 
 def split_target(text: str) -> tuple:
-    """_summary_
-
+    """
+    Разделяет цель и продукт
     Args:
         text (str): Кредитный продукт: Доступный Цель: Торговля
 
@@ -56,13 +56,14 @@ def transition(sheet: Worksheet, cell:int) -> List[Union[int, bool]]:
         if temp_2 != "Служебная записка":
             return [cell+1, False]
         else:
-            return [cell+2, False]
+            return [cell+1, False]
     return [cell, True]
     # ====================================
 
 
 def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
-    """_summary_
+    """
+    Собирает параметры по кредиту.
 
     Args:
         sheet (Worksheet): Лист по которому будет проводиться обработка
@@ -73,8 +74,6 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
     Returns:
         dict: Словарь со всеми готовыми данными по кредиту
     """
-    print(cell+3)
-    print(sheet[f"C{cell+3}"].value)
     month = sheet[f"{letter}{cell+3}"].value.split(' ')
     sum = num_text_converter(sheet[f"{letter}{cell+1}"].value)
     percent = num_text_converter(int(sheet[f"{letter}{cell+2}"].value*100))
@@ -107,7 +106,8 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
 
 
 def solit(sheet: Worksheet, solition: bool, _notice: bool, cell:int) -> dict:
-    """_summary_
+    """
+    Просто разделение идет (С примечанием/Без примечания)
 
     Args:
         sheet (Worksheet): Лист по которому будет проводиться обработка
