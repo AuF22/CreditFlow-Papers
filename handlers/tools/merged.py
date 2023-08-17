@@ -7,7 +7,7 @@
 # +==========================================================+ #
 from openpyxl.worksheet.worksheet import Worksheet
 from typing import Literal
-from .service import get_loan_num
+from .service import get_loan_num, merged_solitions
 
 
 def merged(
@@ -32,10 +32,15 @@ def merged(
         solution_1 = sheet[f"G{cell}"].value
         solution_2 = sheet[f"G{cell+2}"].value
         
+        merged_solition = merged_solitions(
+            solution_1=solution_1, solution_2=solution_2,
+            loan_num_1=loan_1, loan_num_2=loan_2
+            )
+        
         memo = f"{memo} заемщика {full_name} по кредитным договорам "+\
                 loan_1 + " " + loan_2
                 
-        print(f"Двойная\n{memo=}")
+        print(f"Двойная\n{memo=}\n{merged_solition=}")
         
         
     elif loan_type == "single":
