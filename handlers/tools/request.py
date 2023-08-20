@@ -80,8 +80,17 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
     time = num_text_converter(int(month[0]))
     
     product_and_target = split_target(sheet[f"E{cell}"].value)
+
+    # ЧТоб в лишний раз не переносил строку
+    # ====================================================
     branch = branch_strip(sheet[f"C{cell}"].value.strip())
-    
+    try:
+        branch = branch.split('\n')
+        branch = ' '.join(branch)
+    except:
+        pass
+    # ====================================================
+
     # Словарь со всеми данными
     # ==============================================================================================
     req = {

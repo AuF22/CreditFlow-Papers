@@ -38,20 +38,19 @@ def merged(
             )
         
         memo = f"{memo} заемщика {full_name} по кредитным договорам "+\
-                loan_1 + " " + loan_2
+                loan_1 + " и " + loan_2
                 
-        print(f"Двойная\n{memo=}\n{merged_solition=}")
-        
+        return {'memo': memo, 'solution': merged_solition}
         
     elif loan_type == "single":
         loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)
         memo = f"{memo} заемщика {full_name} по кредитному договору {loan_1}"
         
         solution = sheet[f"G{cell}"].value
-        print(f"Одиночная\n {memo=}")
+        return {'memo': memo, 'solution': solution}
     
     elif loan_type == "none_loan":
         if "КП" in full_name:
-            print("Отработан КП")
+            pass
         else:
-            print(memo)
+            return {'memo': memo, 'solution': sheet[f"G{cell}"].value}

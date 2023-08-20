@@ -9,6 +9,7 @@ import openpyxl
 from tkinter.filedialog import askopenfilename
 from .check_protocol import LoanCheck
 from typing import List
+from .docs import creat_docs
 
 
 def start_handler() -> List[dict]:
@@ -28,7 +29,12 @@ def start_handler() -> List[dict]:
     sheet = wb.active                                   # Акстивный лист выбираем
     number_of_com = sheet['B1'].value.split(' ')[-1]    # Номер комитета (из-за структуры протокола)
     date = sheet['I2'].value.strip().split(' ')[1]      # Дата комитете (из-за структуры протокола)
+    
+    level = sheet['B1'].value.split(' ')                # Получаем комитет
+    level = ' '.join(level).split()                     #
+    level = ' '.join(level[1:-2])                       #
     # ==============================================================================================================================
+    
     
 
     # Собираем членов кредитного комитета
@@ -42,7 +48,15 @@ def start_handler() -> List[dict]:
         attended.append(active_cell)
         cell += 1          # Добавляем к ячейке
     # =========================================
+
+
     
+    data = {
+        'number_of_com': number_of_com,
+        'date': date,
+        'attended': attended,
+        'level': level
+    }
     
     cell += 1 # Добавляем к ячейке
     handler = LoanCheck(sheet=sheet, cell=cell) # Инициализация обработчика заявки
@@ -57,7 +71,8 @@ def start_handler() -> List[dict]:
             # ========================================================================================================
             if selection_point == 'Цель в «Онлайн Банк»':
                 handler.loan_application()  # Метод обработчика
-                cell = handler.cell 
+                cell = handler.cell
+                request_dict = handler.request_dict
             # ========================================================================================================
             
             
@@ -67,6 +82,7 @@ def start_handler() -> List[dict]:
             elif selection_point == 'Служебная записка':
                 # Обрабатываются служебки
                 handler.official_leter()
+                service_dict = handler.service_dict
                 cell = handler.cell
             # ==========================================
             
@@ -75,8 +91,9 @@ def start_handler() -> List[dict]:
             # С этим в конце еще поработаем, а так пока оставим
             # ===================================
             else:
-                # Заканчивает работу обработчика
-                print("Обработка заявок завершена начинается ")
+
+                creat_docs(data=data, requests=request_dict, services=service_dict)
+
                 break
             # ===================================
     # =================================================================

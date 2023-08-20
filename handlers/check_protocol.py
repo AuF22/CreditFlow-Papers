@@ -20,6 +20,7 @@ class LoanCheck():
         self.cell = cell + 1
         self.sheet = sheet
         self.request_dict = {}
+        self.service_dict = {}
 
     
     def loan_application(self):
@@ -90,11 +91,10 @@ class LoanCheck():
             # =============================
             
             if sheet[f"C{cell+1}"].value is not None:
-                index = sheet[f'B{cell}'].value # Нумерация вопроса КК
-                
                 
                 if sheet[f"B{cell+2}"].value is None:
-                    self.request_dict[index] = merged(
+                    index = sheet[f'B{cell}'].value # Нумерация вопроса КК
+                    self.service_dict[index] = merged(
                                                     sheet=sheet, 
                                                     cell=cell, 
                                                     loan_type="double"
@@ -110,7 +110,8 @@ class LoanCheck():
                     
                     
                 else:
-                    self.request_dict[index] = merged(
+                    index = sheet[f'B{cell}'].value # Нумерация вопроса КК
+                    self.service_dict[index] = merged(
                                                     sheet=sheet, 
                                                     cell=cell, 
                                                     loan_type="single"
@@ -128,8 +129,8 @@ class LoanCheck():
             # Без кредитного договора передача КП, разрешение на выдачу и т.п.
             # =========================
             else:
-                
-                self.request_dict[index] = merged(
+                index = sheet[f'B{cell}'].value # Нумерация вопроса КК
+                self.service_dict[index] = merged(
                                 sheet=sheet, 
                                 cell=cell, 
                                 loan_type="none_loan"
