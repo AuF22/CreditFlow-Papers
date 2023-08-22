@@ -40,9 +40,11 @@ class LoanCheck():
             solution = sheet[f"G{cell}"].value
             solution = True if solution not in solition_t else False
             # ======================================================
+            
+            division_point = str(sheet[f"C{cell+4}"].value)
             # Заявка с примечанием
             # ============================================================
-            if "филиал" in str(sheet[f"C{cell+4}"].value):
+            if "филиал" in division_point or "представит" in division_point:
                 index = sheet[f'B{cell}'].value # Нумерация вопроса КК
                 self.request_dict[index] = solit(
                                                 sheet=sheet, 

@@ -60,6 +60,9 @@ def start_handler() -> List[dict]:
     
     cell += 1 # Добавляем к ячейке
     handler = LoanCheck(sheet=sheet, cell=cell) # Инициализация обработчика заявки
+    
+    request_dict = {}
+    service_dict = {}
     # Бесконечный цикл перебирает уже сам протокол 
     # ===============================================================
     while True:
@@ -73,6 +76,7 @@ def start_handler() -> List[dict]:
                 handler.loan_application()  # Метод обработчика
                 cell = handler.cell
                 request_dict = handler.request_dict
+                
             # ========================================================================================================
             
             
@@ -91,9 +95,7 @@ def start_handler() -> List[dict]:
             # С этим в конце еще поработаем, а так пока оставим
             # ===================================
             else:
-
                 creat_docs(data=data, requests=request_dict, services=service_dict)
-
                 break
             # ===================================
     # =================================================================

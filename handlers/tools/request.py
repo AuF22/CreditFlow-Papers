@@ -76,26 +76,15 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
     """
     month = sheet[f"{letter}{cell+3}"].value.split(' ')
     sum = num_text_converter(sheet[f"{letter}{cell+1}"].value)
-    percent = num_text_converter(int(sheet[f"{letter}{cell+2}"].value*100))
+    percent = num_text_converter(round(sheet[f"{letter}{cell+2}"].value*100))
     time = num_text_converter(int(month[0]))
-    
     product_and_target = split_target(sheet[f"E{cell}"].value)
 
-    # ЧТоб в лишний раз не переносил строку
-    # ====================================================
-    branch = branch_strip(sheet[f"C{cell}"].value.strip())
-    try:
-        branch = branch.split('\n')
-        branch = ' '.join(branch)
-    except:
-        pass
-    # ====================================================
 
     # Словарь со всеми данными
     # ==============================================================================================
     req = {
             'full_name': sheet[f"C{cell}"].value,                               # ФИО клиента
-            'branch': branch,                                                   # Отделение
             'target': product_and_target[1],                                    # Цель кредита
             'product': product_and_target[0],                                   # Продукт
             'secured': sheet[f'F{cell}'].value,                                 # Обеспечение
@@ -103,12 +92,26 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
             'sum': f'{sum[0]:_}'.replace('_', ' ')+f' ({sum[1].capitalize()})', # Сумма кредита
             'percent': f'{percent[0]} ({percent[1].capitalize()})',             # Процентная ставка
             'time': f'{time[0]} ({time[1].capitalize()}) {month[1]}',           # Срок кредита
-            'notice': None                                                      # Примечания
+            'notice': ''                                                        # Примечания
         }
-
+    
     if _notice:             # Если же имеется примечания по кредиту, то передаются с другой значения
-        req['branch'] = sheet[f"C{cell+4}"].value.strip()                       # Отделение
+        # Чnоб в лишний раз не переносил строку
+        # ========================================
+        branch = sheet[f"C{cell+4}"].value.strip()
+        branch = branch.split('\n')
+        branch = ' '.join(branch)
+        # ========================================
+        req['branch'] = branch                                                  # Отделение
         req['notice'] = sheet[f'G{cell+4}'].value                               # Примечание
+    else:
+        # Чnоб в лишний раз не переносил строку
+        # ====================================================
+        branch = branch_strip(sheet[f"C{cell+3}"].value.strip())
+        branch = branch.split('\n')
+        branch = ' '.join(branch)
+        # ====================================================
+        req['branch'] = branch                                                  # Отделение
     # ==============================================================================================
     
     return req # Возврат словаря

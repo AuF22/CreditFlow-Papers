@@ -47,7 +47,6 @@ def num_text_converter(num: int) -> Tuple[int, str]:
             if temp_num == 1:
                 text = f"одна тысяча {num_text_converter(num=num%1_000)[1]}"
                 text = text.strip()
-                print(text)
                 return (num, text)
             elif temp_num == 2:
                 text = f"две тысячи {num_text_converter(num=num%1_000)[1]}"

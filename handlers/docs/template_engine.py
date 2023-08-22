@@ -7,33 +7,44 @@
 # +==========================================================+ #
 from .month import month_name
 from docxtpl import DocxTemplate
+from .branches import pull_branch
 import os
 
 
 def creat_docs(requests: dict, services: dict, data: dict) -> None:
+    """
+    Функция создает выписки в формате docx по шаблону
 
-    day = data["date"].split('.')[0]
-    month = month_name[int(data["date"].split('.')[1])]
-    year = data['date'].split('.')[2]
-    # Получаем путь к папке "Документы" пользователя
-    documents_path = f'{os.path.expanduser("~")}{os.sep}Documents'
-
-    # Название создаваемой папки
-    new_folder_name = f"Выписки{os.sep}КК ГО {data['number_of_com']}"
-
-    # Собираем полный путь для новой папки
-    new_folder_path = os.path.join(documents_path, new_folder_name)
-
-    # Создаем папку
+    Args:
+        requests (dict): Словарь со всеми собранными заявками
+        services (dict): Словарь со всеми собранными служебками
+        data (dict): Словарь с общими данными
+    Returns:
+        Ничего не возвращает в папке Documents//Выписки// создается файлы
+    """
+    # =================================================
+    day = data["date"].split('.')[0]                    # День комитета
+    month = month_name[int(data["date"].split('.')[1])] # Месяц комитета прописью
+    year = data['date'].split('.')[2]                   # Год
+    # =================================================
+    
+    
+    # Создаем папки где будут храниться дкументы
+    # ===============================================================
+    documents_path = f'{os.path.expanduser("~")}{os.sep}Documents'      # Получаем путь к папке "Документы" пользователя
+    new_folder_name = f"Выписки{os.sep}КК ГО {data['number_of_com']}"   # Название создаваемой папки
+    new_folder_path = os.path.join(documents_path, new_folder_name)     # Собираем полный путь для новой папки 
     try:
         os.makedirs(new_folder_path)
     except FileExistsError:
         pass
-
-    if len(requests) != 0:
+    # ===============================================================
+    
+    
+    if len(requests) != 0: # Если словарь пустой, просто пропускаем
         for i in requests:
-            
             template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_заявка_согл.docx")
+            
             temp_dict = {
                 "Уровень": data['level'].capitalize(),
                 "Номер_комитета": data["number_of_com"],
@@ -52,10 +63,15 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Примечание": requests[i]['notice'],
                 "Председатель": data['attended'][0]
             }
-
+            
             template.render(temp_dict)
-            template.save(f"{new_folder_path}{os.sep}КК ГО {i}.docx")
-    if len(services) !=0:
+            template.save(f"{new_folder_path}{os.sep}КК" \
+                        + f" {str(temp_dict['Номер_комитета'])}"\
+                        + f" {pull_branch(temp_dict['Филиал'], save='request')}"\
+                        + f" - {temp_dict['ФИО']}.docx")
+
+
+    if len(services) !=0: # Если словарь пустой, просто пропускаем
         for i in services:
             template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_служебка.docx")
             temp_dict = {
@@ -70,6 +86,10 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Секретарь": data["attended"][-1],
                 "Члены_КК_ГО": '\n'.join(data["attended"][1::])
             }
+            
             template.render(temp_dict)
-            template.save(f"{new_folder_path}{os.sep}КК ГО {i}.docx")
+            template.save(f"{new_folder_path}{os.sep}ВЫПИСКА ИЗ РКК" \
+                        + f" {temp_dict['Номер_комитета']} " \
+                        + f"{pull_branch(branch=temp_dict['Служебная_записка'], save='service')} - "
+                        + f"{services[i]['full_name']}.docx")
         

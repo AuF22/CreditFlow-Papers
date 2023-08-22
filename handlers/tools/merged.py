@@ -17,40 +17,45 @@ def merged(
     """_summary_
 
     Args:
-        sheet (Worksheet): _description_
-        cell (int): _description_
-        loan_type (Literal[&quot;double&quot;, &quot;single&quot;, &quot;none_loan&quot;]): _description_
+        sheet (Worksheet): Лист по которому будет проводиться обработка
+        cell (int): Ячейка
+        loan_type (Literal[double, single, none_loan]): Параметры для обработки служебок
     """
     
     full_name = sheet[f"C{cell}"].value
     memo = sheet[f"E{cell}"].value
     
-
+    # Двойное решение, т.е. у одного клиента по двум кредитам
+    # ============================================================================
     if loan_type == "double":
-        loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)
-        loan_2 = get_loan_num(sheet[f"C{cell+3}"].value)
-        solution_1 = sheet[f"G{cell}"].value
-        solution_2 = sheet[f"G{cell+2}"].value
-        
+        loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)    # Первый кредитный договор
+        loan_2 = get_loan_num(sheet[f"C{cell+3}"].value)    # Второй кредитный договор
+        solution_1 = sheet[f"G{cell}"].value                # Решение по первому кредиту
+        solution_2 = sheet[f"G{cell+2}"].value              # Решение по второму кредиту
         merged_solition = merged_solitions(
             solution_1=solution_1, solution_2=solution_2,
             loan_num_1=loan_1, loan_num_2=loan_2
             )
-        
         memo = f"{memo} заемщика {full_name} по кредитным договорам "+\
                 loan_1 + " и " + loan_2
-                
-        return {'memo': memo, 'solution': merged_solition}
-        
+        return {'memo': memo, 'solution': merged_solition, 'full_name': full_name}
+    # ============================================================================
+    
+    # Тоже самое, только с одним кредитом
+    # =======================================================================
     elif loan_type == "single":
         loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)
         memo = f"{memo} заемщика {full_name} по кредитному договору {loan_1}"
-        
         solution = sheet[f"G{cell}"].value
-        return {'memo': memo, 'solution': solution}
+        return {'memo': memo, 'solution': solution, 'full_name': full_name}
+    # =======================================================================
     
+    # А тут это, когда нету кредитного довговора
+    # ========================================================================================
     elif loan_type == "none_loan":
         if "КП" in full_name:
+            # При передаче КП просто переходим дальше
             pass
         else:
-            return {'memo': memo, 'solution': sheet[f"G{cell}"].value}
+            return {'memo': memo, 'solution': sheet[f"G{cell}"].value, 'full_name': full_name}
+    # ========================================================================================
