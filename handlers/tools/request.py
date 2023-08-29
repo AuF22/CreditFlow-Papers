@@ -23,11 +23,9 @@ def split_target(text: str) -> tuple:
     Returns:
         _type_: (Продукт т.е Доступный, Цель т.е. Торговля)
     """
-    
     text = text.split(':')
     product = text[1][:-5].strip()
     target = text[-1].strip()
-    
     return (product, target)
 
 

@@ -59,7 +59,6 @@ def merged_solitions (
     for letter_1 in solution_1:
         letter_2 = solution_2[i]
         i += 1
-
         if letter_1 == letter_2:
             # Текст идеинтичный вставляем только один
             merged_list.append(letter_1)
@@ -78,7 +77,6 @@ def merged_solitions (
             merged_list.append(letter_1)
     # ===============================================================================
     
-    
     merged_list = '\n'.join(merged_list)
     
     # Не выглядит красиво, но свою работу полностью выполняет
@@ -86,6 +84,7 @@ def merged_solitions (
     merged_list = merged_list.replace('данного кредита', 'данных кредитов')
     merged_list = merged_list.replace('данный кредит', 'данные кредиты')
     merged_list = merged_list.replace('кредита', 'кредитов')
+    merged_list = merged_list.replace('дополнительное соглашение', 'дополнительные соглашения')
     # =====================================================================
     
     return merged_list # Возврат полностью оформленного текста

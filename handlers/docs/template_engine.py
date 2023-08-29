@@ -10,6 +10,9 @@ from docxtpl import DocxTemplate
 from .branches import pull_branch
 import os
 
+# Отрицательные решения Кредитного комитета, нужно для выбора ячейки
+solition_t = ["Отказать", "Отправить на доработку"] 
+
 
 def creat_docs(requests: dict, services: dict, data: dict) -> None:
     """
@@ -19,6 +22,7 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
         requests (dict): Словарь со всеми собранными заявками
         services (dict): Словарь со всеми собранными служебками
         data (dict): Словарь с общими данными
+        
     Returns:
         Ничего не возвращает в папке Documents//Выписки// создается файлы
     """
@@ -27,7 +31,6 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
     month = month_name[int(data["date"].split('.')[1])] # Месяц комитета прописью
     year = data['date'].split('.')[2]                   # Год
     # =================================================
-    
     
     # Создаем папки где будут храниться дкументы
     # ===============================================================
@@ -39,8 +42,6 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
     except FileExistsError:
         pass
     # ===============================================================
-    
-    
     if len(requests) != 0: # Если словарь пустой, просто пропускаем
         for i in requests:
             template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_заявка_согл.docx")
@@ -52,6 +53,7 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Месяц": month,
                 "Год": year,
                 "ФИО": requests[i]["full_name"],
+                "Условие": "на следующих условиях",
                 "Решение": requests[i]["answer"],
                 "Сумма": requests[i]["sum"],
                 "Процент": requests[i]["percent"],
@@ -64,12 +66,19 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Председатель": data['attended'][0]
             }
             
+            # Изменение шапки решения
+            # =====================================================
+            if temp_dict["Решение"] == solition_t[0]:
+                temp_dict["Условие"] = "и отказана"
+            elif temp_dict["Решение"] == solition_t[1]:
+                temp_dict["Условие"] = "и отправлена на доработку"
+            # =====================================================
+            
             template.render(temp_dict)
             template.save(f"{new_folder_path}{os.sep}КК" \
                         + f" {str(temp_dict['Номер_комитета'])}"\
                         + f" {pull_branch(temp_dict['Филиал'], save='request')}"\
                         + f" - {temp_dict['ФИО']}.docx")
-
 
     if len(services) !=0: # Если словарь пустой, просто пропускаем
         for i in services:
@@ -92,4 +101,3 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                         + f" {temp_dict['Номер_комитета']} " \
                         + f"{pull_branch(branch=temp_dict['Служебная_записка'], save='service')} - "
                         + f"{services[i]['full_name']}.docx")
-        

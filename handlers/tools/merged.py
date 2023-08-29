@@ -14,7 +14,8 @@ def merged(
     sheet: Worksheet, cell: int, 
     loan_type: Literal["double", "single", "none_loan"]
     ):
-    """_summary_
+    """
+    Подготавливает данные для дальнейшей обработки данных
 
     Args:
         sheet (Worksheet): Лист по которому будет проводиться обработка
@@ -28,6 +29,7 @@ def merged(
     # Двойное решение, т.е. у одного клиента по двум кредитам
     # ============================================================================
     if loan_type == "double":
+        print(cell+1)
         loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)    # Первый кредитный договор
         loan_2 = get_loan_num(sheet[f"C{cell+3}"].value)    # Второй кредитный договор
         solution_1 = sheet[f"G{cell}"].value                # Решение по первому кредиту
@@ -44,6 +46,7 @@ def merged(
     # Тоже самое, только с одним кредитом
     # =======================================================================
     elif loan_type == "single":
+        print(cell+1)
         loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)
         memo = f"{memo} заемщика {full_name} по кредитному договору {loan_1}"
         solution = sheet[f"G{cell}"].value
