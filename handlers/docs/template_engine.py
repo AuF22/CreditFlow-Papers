@@ -82,6 +82,8 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
 
     if len(services) !=0: # Если словарь пустой, просто пропускаем
         for i in services:
+            if services[i] is None:
+                break
             template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_служебка.docx")
             temp_dict = {
                 "Уровень": data['level'].upper(),

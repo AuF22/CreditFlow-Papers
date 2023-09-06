@@ -86,8 +86,15 @@ class LoanCheck():
         """
             
         sheet = self.sheet  # Лист по которому будет проводиться обработка
-        cell = self.cell + 1    # Ячейка
-
+        
+        # Проверка,для установки первичной точки
+        # =============================
+        if len(self.request_dict) == 0:
+            cell = self.cell
+        else:     
+            cell = self.cell + 1
+        # =============================
+        
         while True:
             
             # С кредитным договором

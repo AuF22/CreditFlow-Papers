@@ -46,7 +46,6 @@ def merged(
     # Тоже самое, только с одним кредитом
     # =======================================================================
     elif loan_type == "single":
-        print(cell+1)
         loan_1 = get_loan_num(sheet[f"C{cell+1}"].value)
         memo = f"{memo} заемщика {full_name} по кредитному договору {loan_1}"
         solution = sheet[f"G{cell}"].value
