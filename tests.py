@@ -1,5 +1,7 @@
-from decimal import Decimal
+a = True
 
-a = '100,10'
+b = 1
+c = 0
 
-float(a)
+x = b if a else c
+print(x)

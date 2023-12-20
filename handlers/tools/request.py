@@ -59,7 +59,7 @@ def transition(sheet: Worksheet, cell:int) -> List[Union[int, bool]]:
     # ====================================
 
 
-def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
+def notice(sheet: Worksheet, _notice:bool, cell:int, solition: bool, allowance:int, credit_line: bool) -> dict:
     """
     Собирает параметры по кредиту.
 
@@ -68,10 +68,14 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
         _notice (bool): Для осознаяни есть ли примечание по кредиту или же нету
         cell (int): Ячейка
         letter (str): Буква по которому будет получать данные
+        allowance (int): Надбавка к ячейке для определения примечаний
+        credit_line (bool): Продукт является ли кредитной линией
 
     Returns:
         dict: Словарь со всеми готовыми данными по кредиту
     """
+
+    letter = "H" if solition else "L"
     month = sheet[f"{letter}{cell+3}"].value.split(' ')
     sum = num_text_converter(sheet[f"{letter}{cell+1}"].value)
     percent = num_text_converter(round(sheet[f"{letter}{cell+2}"].value*100))
@@ -93,19 +97,29 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
             'notice': ''                                                        # Примечания
         }
     
+    # Дополнительные параметры для кредитной линии
+    # ======================================================
+    if credit_line is True:
+        req['commission'] = sheet[f"h{cell+4}"].value
+        req['type_of_repayment'] = sheet[f"H{cell+5}"].value
+    else:
+        pass
+    # ====================================================== 
+
     if _notice:             # Если же имеется примечания по кредиту, то передаются с другой значения
         # Чnоб в лишний раз не переносил строку
         # ========================================
-        branch = sheet[f"C{cell+4}"].value.strip()
+        branch = sheet[f"C{cell+allowance}"].value.strip()
         branch = branch.split('\n')
         branch = ' '.join(branch)
         # ========================================
         req['branch'] = branch                                                  # Отделение
-        req['notice'] = sheet[f'G{cell+4}'].value                               # Примечание
+        req['notice'] = sheet[f'G{cell+allowance}'].value                               # Примечание
     else:
         # Чnоб в лишний раз не переносил строку
         # ====================================================
-        branch = branch_strip(sheet[f"C{cell+3}"].value.strip())
+
+        branch = branch_strip(sheet[f"C{cell+allowance-1}"].value.strip())
         branch = branch.split('\n')
         branch = ' '.join(branch)
         # ====================================================
@@ -113,24 +127,3 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, letter: str) -> dict:
     # ==============================================================================================
     
     return req # Возврат словаря
-
-
-def solit(sheet: Worksheet, solition: bool, _notice: bool, cell:int) -> dict:
-    """
-    Просто разделение идет (С примечанием/Без примечания)
-
-    Args:
-        sheet (Worksheet): Лист по которому будет проводиться обработка
-        solition (bool):ЕСли отрицательное решение предпологается, что данные хранятся в ячейке L
-        _notice (bool): Для осознаяни есть ли примечание по кредиту или же нету
-        cell (int): Ячейка
-
-    Returns:
-        dict: Словарь со всеми готовыми данными по кредиту
-    """
-    if solition:
-        # Решение положительное 
-        return notice(sheet, _notice, cell, letter='H')
-    else:
-        # Решение отрицательное
-        return notice(sheet, _notice, cell, letter='L')

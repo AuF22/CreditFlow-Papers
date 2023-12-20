@@ -5,8 +5,7 @@
 #  Instagram:    https://www.linkedin.com/in/altynbek-aseev/   #
 #                       © AuF22                                #
 # +==========================================================+ #
-from .tools import Worksheet, solition_t, solit, transition, merged
-
+from .tools import Worksheet, solition_t, notice, transition, merged, split_target
 
 class LoanCheck():
     """Класс для обработки заявок по кредитам"""
@@ -40,17 +39,26 @@ class LoanCheck():
             solution = True if solution not in solition_t else False
             # ======================================================
             
-            division_point = str(sheet[f"C{cell+4}"].value)
+            # Проверяем продукт "Кредитная линия" (У нее другая структура)
+            # ============================================================
+            credit_line = True if 'Кредитная линия' == str(split_target(sheet[f"E{cell}"].value)[0]) else False
+            allowance = 6 if credit_line else 4
+            # ============================================================
+
+            division_point = str(sheet[f"C{cell+allowance}"].value)
             # Заявка с примечанием
             # ============================================================
             if "филиал" in division_point or "представит" in division_point:
                 index = sheet[f'B{cell}'].value # Нумерация вопроса КК
-                self.request_dict[index] = solit(
+                self.request_dict[index] = notice(
                                                 sheet=sheet, 
                                                 solition=solution, 
                                                 _notice=True, 
-                                                cell=cell)
-                transit = transition(sheet=sheet, cell=cell+5)
+                                                cell=cell,
+                                                allowance=allowance,
+                                                credit_line=credit_line
+                                                )
+                transit = transition(sheet=sheet, cell=cell+allowance+1)
                 
                 if transit[1]:
                     cell = transit[0] # Локальное изменение ячейки
@@ -63,13 +71,15 @@ class LoanCheck():
             # =============================================================
             else:
                 index = sheet[f'B{cell}'].value  # Нумерация вопроса КК
-                self.request_dict[index] = solit(
+                self.request_dict[index] = notice(
                                                 sheet=sheet, 
                                                 solition=solution, 
                                                 _notice=False, 
-                                                cell=cell
+                                                cell=cell,
+                                                allowance=allowance,
+                                                credit_line=credit_line
                                                 )
-                transit = transition(sheet=sheet, cell=cell+4)
+                transit = transition(sheet=sheet, cell=cell+allowance)
                 
                 if transit[1]:
                     cell = transit[0] # Локальное изменение ячейки

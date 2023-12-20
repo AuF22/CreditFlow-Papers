@@ -9,6 +9,7 @@ from .month import month_name
 from docxtpl import DocxTemplate
 from .branches import pull_branch
 import os
+import shutil
 
 # Отрицательные решения Кредитного комитета, нужно для выбора ячейки
 solition_t = ["Отказать", "Отправить на доработку"] 
@@ -40,7 +41,10 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
     try:
         os.makedirs(new_folder_path)
     except FileExistsError:
+        shutil.rmtree(new_folder_path)
+        os.makedirs(new_folder_path)
         pass
+
     # ===============================================================
     if len(requests) != 0: # Если словарь пустой, просто пропускаем
         for i in requests:
@@ -65,6 +69,10 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Примечание": requests[i]['notice'],
                 "Председатель": data['attended'][0]
             }
+
+            if temp_dict["Продукт"] == "Кредитная линия":
+                template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_кредитная_линия_согл.docx")
+                temp_dict["Метод_погашения"] = requests[i]["type_of_repayment"]
             
             # Изменение шапки решения
             # =====================================================
