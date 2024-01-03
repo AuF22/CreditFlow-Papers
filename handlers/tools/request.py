@@ -94,7 +94,9 @@ def notice(sheet: Worksheet, _notice:bool, cell:int, solition: bool, allowance:i
             'sum': f'{sum[0]:_}'.replace('_', ' ')+f' ({sum[1].capitalize()})', # Сумма кредита
             'percent': f'{percent[0]} ({percent[1].capitalize()})',             # Процентная ставка
             'time': f'{time[0]} ({time[1].capitalize()}) {month[1]}',           # Срок кредита
-            'notice': ''                                                        # Примечания
+            'notice': '',
+            'commission': None,
+            'type_of_repayment': None                                                                                                                                                               # Примечания
         }
     
     # Дополнительные параметры для кредитной линии

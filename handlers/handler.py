@@ -10,6 +10,8 @@ from tkinter.filedialog import askopenfilename
 from .check_protocol import LoanCheck
 from typing import List
 from .docs import creat_docs
+from data.db import SQLite
+sql = SQLite() # Создаем объект класса
 
 
 def start_handler() -> List[dict]:
@@ -52,6 +54,7 @@ def start_handler() -> List[dict]:
         'attended': attended,
         'level': level
     }
+    print(data['attended'])
     
     cell += 1 # Добавляем к ячейке
     handler = LoanCheck(sheet=sheet, cell=cell) # Инициализация обработчика заявки
@@ -84,6 +87,9 @@ def start_handler() -> List[dict]:
             # Это уже конец обработчика, тут создается выписки по шаблонам
             # =====================================================================
             else:
+                sql.insert_comit(params=data)
+                sql.insert_request(params=request_dict)
+                sql.insert_services(params=service_dict)
                 creat_docs(data=data, requests=request_dict, services=service_dict)
                 break
             # =====================================================================

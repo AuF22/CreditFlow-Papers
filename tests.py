@@ -1,7 +1,11 @@
-a = True
+from data.db import SQLite
 
-b = 1
-c = 0
+dd = {
+    'number' : 1,
+    'date': '11.12.2023'
+}
 
-x = b if a else c
-print(x)
+
+data = SQLite()
+
+data.insert(params=dd)

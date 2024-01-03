@@ -92,6 +92,10 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
         for i in services:
             if services[i] is None:
                 break
+
+            elif 'КП' in services[i]['full_name']:
+                pass
+            
             template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_служебка.docx")
             temp_dict = {
                 "Уровень": data['level'].upper(),
@@ -105,7 +109,7 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
                 "Секретарь": data["attended"][-1],
                 "Члены_КК_ГО": '\n'.join(data["attended"][1::])
             }
-            
+
             template.render(temp_dict)
             template.save(f"{new_folder_path}{os.sep}ВЫПИСКА ИЗ РКК" \
                         + f" {temp_dict['Номер_комитета']} " \
