@@ -73,6 +73,8 @@ def creat_docs(requests: dict, services: dict, data: dict) -> None:
             if temp_dict["Продукт"] == "Кредитная линия":
                 template = DocxTemplate(f"data{os.sep}templates{os.sep}Шаблон_кредитная_линия_согл.docx")
                 temp_dict["Метод_погашения"] = requests[i]["type_of_repayment"]
+                temp_dict["Комиссия"] = requests[i]["commission"]
+
             
             # Изменение шапки решения
             # =====================================================
