@@ -1,7 +1,7 @@
 # +==========================================================+ #
 #  GitHub:       https://github.com/AuF22                      #
-#  LinkedIn:     https://www.instagram.com/mr_aseev14/         #
-#  Instagram:    https://www.linkedin.com/in/altynbek-aseev/   #
+#  LinkedIn:     https://www.linkedin.com/in/altynbek-aseev/   #
+#  Instagram:    https://www.instagram.com/mr_aseev14/         #
 #                       © AuF22                                #
 # +==========================================================+ #
 

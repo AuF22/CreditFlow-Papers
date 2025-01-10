@@ -43,7 +43,9 @@ def merged_solitions (
     Returns:
         str: Готовый текст который можно просто вставить
     """
-    
+    merged_list = [] # Список который будет наполнять
+    merged_solutions = (f"по кредитному договору {loan_num_1}:\n{solution_1}\n\nпо кредитному договору {loan_num_2}:\n{solution_2}")
+
     # Создаем список для перебора
     # =================================
     solution_1 = solution_1.split('\n')
@@ -52,39 +54,39 @@ def merged_solitions (
     
     i = 0 # Номер ирерации
     
-    merged_list = [] # Список который будет наполнять
-    
+
+
     # Вся магия програмиования со строками
     # ===============================================================================
-    for letter_1 in solution_1:
-        letter_2 = solution_2[i]
-        i += 1
-        if letter_1 == letter_2:
-            # Текст идеинтичный вставляем только один
-            merged_list.append(letter_1)
-        else:
-            # Текст разный придется форматировать
-            ii = 0 # Номер итерации для второго перебора
-            # Второй перебор для форматирования текста
-            for l in letter_1:
-                if l == letter_2[ii]:
-                    ii += 1
-                else:
-                    break
-            letter_1 = f"{letter_1[0:ii]}\nпо кредитному договору {loan_num_1}: " +\
-                        f"{letter_1[ii:]}\nпо кредитному договору {loan_num_2}: " +\
-                        f"{letter_2[ii:]}"
-            merged_list.append(letter_1)
+    # for letter_1 in solution_1:
+    #     letter_2 = solution_2[i]
+    #     i += 1
+    #     if letter_1 == letter_2:
+    #         # Текст идеинтичный вставляем только один
+    #         merged_list.append(letter_1)
+    #     else:
+    #         # Текст разный придется форматировать
+    #         ii = 0 # Номер итерации для второго перебора
+    #         # Второй перебор для форматирования текста
+    #         for l in letter_1:
+    #             if l == letter_2[ii]:
+    #                 ii += 1
+    #             else:
+    #                 break
+    #         letter_1 = f"{letter_1[0:ii]}\nпо кредитному договору {loan_num_1}: " +\
+    #                     f"{letter_1[ii:]}\nпо кредитному договору {loan_num_2}: " +\
+    #                     f"{letter_2[ii:]}"
+    #         merged_list.append(letter_1)
     # ===============================================================================
     
-    merged_list = '\n'.join(merged_list)
+    #merged_list = '\n'.join(merged_list)
     
     # Не выглядит красиво, но свою работу полностью выполняет
     # =====================================================================
-    merged_list = merged_list.replace('данного кредита', 'данных кредитов')
-    merged_list = merged_list.replace('данный кредит', 'данные кредиты')
-    merged_list = merged_list.replace('кредита', 'кредитов')
-    merged_list = merged_list.replace('дополнительное соглашение', 'дополнительные соглашения')
+    # merged_list = merged_list.replace('данного кредита', 'данных кредитов')
+    # merged_list = merged_list.replace('данный кредит', 'данные кредиты')
+    # merged_list = merged_list.replace('кредита', 'кредитов')
+    # merged_list = merged_list.replace('дополнительное соглашение', 'дополнительные соглашения')
     # =====================================================================
     
-    return merged_list # Возврат полностью оформленного текста
+    return merged_solutions # Возврат полностью оформленного текста
