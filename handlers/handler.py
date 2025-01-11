@@ -11,6 +11,10 @@ from .check_protocol import LoanCheck
 from typing import List
 from .docs import creat_docs
 from data.db import SQLite
+from data.settings.settings import Settings
+import os, shutil
+
+
 sql = SQLite() # Создаем объект класса
 
 
@@ -96,5 +100,48 @@ def start_handler() -> List[dict]:
     # =================================================================
 
 
-if __name__ == "__main__":
-    start_handler()
+def doc_creater():
+    """Основной обработчик создания документов"""
+    from docxtpl import DocxTemplate
+    template = DocxTemplate(askopenfilename())
+    # ===================================================================
+    stg = Settings()                                                    # Создаем объект класса с найстройками 
+    cell = stg.cell                                                     # Получаем ячейку с которой начинается чтение
+    # ===================================================================
+
+    # ===================================================================
+    wb = openpyxl.load_workbook(askopenfilename())                      # Создаем экземпляр класса`
+    sheet = wb.active                                                   # Активный лист
+    documents_path = f'{os.path.expanduser("~")}{os.sep}Documents{os.sep}Tamplates' # Получаем путь к папке "Документы" пользователя
+    # ===================================================================
+
+    while True:
+        # ===============================================================
+        main_folder = sheet[f'{stg.main[0]}{cell}'].value               # Получаем название папки
+        main_name = sheet[f'{stg.main[1]}{cell}'].value                 # Получаем название файла
+        if main_folder is None:                                         # Если папка пустая, то прекращаем
+            break
+        new_folder_name = f'{main_folder}'                              # Название создаваемой папки
+        new_folder_path = os.path.join(documents_path, new_folder_name) # Собираем полный путь для новой папки
+        try:
+            os.makedirs(new_folder_path)                                # Создаем папку
+        except FileExistsError:                                         # Если папка уже существует, то пропускаем
+            pass
+        # ===============================================================
+
+        # ===============================================================
+        dictionary = {}                                                 # Словарь для шаблона
+        for i in stg.stg.items():                                       # Перебираем настройки
+            i = list(i)                                                 # Преобразуем в список
+            values = sheet[f'{i[0]}{cell}'].value                       # Получаем значения
+            if i[1].lower() == 'date' or i[1].lower() == 'дата':        # Если ключ равен 'date'
+                values = values.strftime('%d.%m.%Y')                    # Преобразуем в нужный формат
+            dictionary[i[1]] = values                                   # Добавляем в словарь
+        # ===============================================================
+
+        # ===============================================================
+        template.render(dictionary)                                     # Рендерим шаблон
+        template.save(f"{new_folder_path}{os.sep}{main_name}.docx")     # Сохраняем шаблон
+        # ===============================================================
+            
+        cell += 1   # Добавляем к ячейке
